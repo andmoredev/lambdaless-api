@@ -53,46 +53,19 @@ Resources:
                   - "dynamodb:PutItem"
                 Resource: !GetAtt ProductsTable.Arn
 
+  OpenAPIS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: lechon-open-api-definitions
+
   ProductsAPI:
     Type: AWS::Serverless::Api
+    DependsOn:
+      - OpenAPIS3Bucket
     Properties:
         StageName: Lambdaless
         DefinitionBody:
-            openapi: 3.0.1
-            info:
-              title:
-                Ref: AWS::StackName
-            paths:
-              "/products":
-                put:
-                  consumes:
-                    - "application/json"
-                  produces:
-                    - "application/json"
-                  responses:
-                    "200":
-                      description: "200 response"
-                      schema:
-                        $ref: "#/definitions/Empty"
-                  x-amazon-apigateway-integration:
-                    httpMethod: POST
-                    type: AWS
-                    uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/PutItem" }
-                    credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
-                    requestTemplates:
-                      application/json: { 'Fn::Sub': "{ \n\
-                      \t\"TableName\": \"${Table}\",\n\
-                      \t\"Item\": {\n\
-                      \t\t\"pk\": {\n\
-                      \t\t\t\"S\": \"$input.path('$.PageId')\"\n\
-                      \t\t},\n\
-                      \t\t\"EventCount\": {\n\
-                      \t\t\t\"N\": \"$input.path('$.EventCount')\"\n\
-                      \t\t},\n\
-                      \t\t\"Message\": {\n\
-                      \t\t\t\"S\": \"$input.path('$.Message')\"\n\
-                      \t\t}\n
-                      \t}\n}" }
-                    responses:
-                      default:
-                        statusCode: "200"
+          'Fn::Transform':
+            Name: AWS::Include
+            Parameters:
+              Location: 's3://lechon-open-api-definitions/products-api-open-api-definition.yaml'

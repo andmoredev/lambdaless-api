@@ -1,38 +1,35 @@
 openapi: 3.0.1
 info:
-title:
-  Ref: Products API
+  title:
+    Products API
+  version: 1.0.0
 paths:
-"/products":
-  put:
-    consumes:
-      - "application/json"
-    produces:
-      - "application/json"
-    responses:
-      "200":
-        description: "200 response"
-        schema:
-          $ref: "#/definitions/Empty"
-    x-amazon-apigateway-integration:
-      httpMethod: POST
-      type: AWS
-      uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/PutItem" }
-      credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
-      requestTemplates:
-        application/json: { 'Fn::Sub': "{ \n\
-        \t\"TableName\": \"${Table}\",\n\
-        \t\"Item\": {\n\
-        \t\t\"pk\": {\n\
-        \t\t\t\"S\": \"$input.path('$.PageId')\"\n\
-        \t\t},\n\
-        \t\t\"EventCount\": {\n\
-        \t\t\t\"N\": \"$input.path('$.EventCount')\"\n\
-        \t\t},\n\
-        \t\t\"Message\": {\n\
-        \t\t\t\"S\": \"$input.path('$.Message')\"\n\
-        \t\t}\n
-        \t}\n}" }
+  /products:
+    post:
       responses:
-        default:
-          statusCode: "200"
+        201:
+          description: "201 response"
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: AWS
+        uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/PutItem" }
+        credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
+        requestTemplates:
+          application/json: { 'Fn::Sub': "{ \n\
+          \t\"TableName\": \"${Table}\",\n\
+          \t\"Item\": {\n\
+          \t\t\"pk\": {\n\
+          \t\t\t\"S\": \"$input.path('$.PageId')\"\n\
+          \t\t},\n\
+          \t\t\"EventCount\": {\n\
+          \t\t\t\"N\": \"$input.path('$.EventCount')\"\n\
+          \t\t},\n\
+          \t\t\"Message\": {\n\
+          \t\t\t\"S\": \"$input.path('$.Message')\"\n\
+          \t\t}\n
+          \t}\n}" }
+        responses:
+          default:
+            statusCode: "200"
+
+    
