@@ -8,28 +8,115 @@ paths:
     post:
       responses:
         201:
-          description: "201 response"
+          $ref: "#/components/responses/Created"
       x-amazon-apigateway-integration:
         httpMethod: POST
         type: AWS
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/PutItem" }
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         requestTemplates:
-          application/json: { 'Fn::Sub': "{ \n\
-          \t\"TableName\": \"${Table}\",\n\
-          \t\"Item\": {\n\
-          \t\t\"pk\": {\n\
-          \t\t\t\"S\": \"$input.path('$.PageId')\"\n\
-          \t\t},\n\
-          \t\t\"EventCount\": {\n\
-          \t\t\t\"N\": \"$input.path('$.EventCount')\"\n\
-          \t\t},\n\
-          \t\t\"Message\": {\n\
-          \t\t\t\"S\": \"$input.path('$.Message')\"\n\
-          \t\t}\n
-          \t}\n}" }
+          application/json: { 'Fn::Sub': '{ 
+            "TableName": "${Table}",
+            "Item": {
+              "pk": {
+                "S": "$context.requestId"
+              },
+              "productname": {
+                "S": "$input.path("$.name")"
+              }
+          }}' }
+        responses:
+          default:
+            statusCode: 201
+            responseTemplates:
+              application/json: '#set($inputRoot = $input.path("$"))
+                {
+                    "id": "$context.requestId"
+                }'
+  /products/{productId}:
+    put:
+      parameters:
+        - name: "productId"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        204:
+          $ref: "#/components/responses/Empty"
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: AWS
+        uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/UpdateItem" }
+        credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
+        requestTemplates:
+          application/json: { 'Fn::Sub': '{ 
+              "TableName": "${Table}",
+              "Key": {
+                      "pk": {
+                        "S": "$input.params("productId")"
+                      }
+                     },
+              "UpdateExpression": "SET productname = :name",
+              "ExpressionAttributeValues": {
+                ":name":  {
+                            "S": "$input.path("$.name")"
+                          }
+              }
+            }'
+          }
+        responses:
+          default:
+            statusCode: 204
+
+    delete:
+      parameters:
+      - name: "productId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/components/responses/Empty"
+      x-amazon-apigateway-integration:
+        credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
+        uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/DeleteItem" }
+        requestTemplates:
+          application/json:  { 'Fn::Sub': '{
+            "TableName": "${Table}",
+              "Key": {
+                "pk": {
+                  "S": "$input.params("productId")"
+                }
+              },
+              "ReturnValues": "ALL_OLD"
+            }'
+          }
         responses:
           default:
             statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws"
 
-    
+components:
+  schemas:
+    Empty:
+      type: object
+      description: Empty Schema
+  responses:
+    Created: #201
+      description: The request succeeded and created a new resource.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+            required:
+              - id
+    Empty:
+      type: object
+      description: Empty Schema

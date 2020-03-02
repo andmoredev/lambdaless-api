@@ -47,21 +47,15 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              -
-                Effect: Allow
+              - Effect: Allow
                 Action:
-                  - "dynamodb:PutItem"
+                - "dynamodb:PutItem"
+                - "dynamodb:UpdateItem"
+                - "dynamodb:DeleteItem"
                 Resource: !GetAtt ProductsTable.Arn
-
-  OpenAPIS3Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: lechon-open-api-definitions
 
   ProductsAPI:
     Type: AWS::Serverless::Api
-    DependsOn:
-      - OpenAPIS3Bucket
     Properties:
         StageName: Lambdaless
         DefinitionBody:
