@@ -8,11 +8,14 @@ paths:
     get:
       responses:
         200:
-          schema:
-            type: array
-            items:
-              $ref: "#/components/responses/Product"
-          
+          description: The request succeded and results are in the response message.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/responses/Product"
+              
       x-amazon-apigateway-integration:
         httpMethod: POST
         type: AWS
