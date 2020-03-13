@@ -5,6 +5,39 @@ info:
   version: 1.0.0
 paths:
   /products:
+    get:
+      responses:
+        200:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/responses/Product"
+          
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: AWS
+        uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/Scan" }
+        credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
+        requestTemplates:
+          application/json: { 'Fn::Sub': '{ 
+                "TableName": "${Table}"
+              }'
+          }
+        responses:
+          default:
+            statusCode: 200
+            responseTemplates:
+              application/json: '#set($inputRoot = $input.path("$"))
+                          {
+                            "products": [
+                              #foreach($elem in $inputRoot.Items) {
+                                "id": "$elem.pk.S",
+                                "name": "$elem.productname.S",
+                              }#if($foreach.hasNext),#end
+                              #end
+                            ]
+                          }'
+
     post:
       responses:
         201:
@@ -34,12 +67,48 @@ paths:
                     "id": "$context.requestId"
                 }'
   /products/{productId}:
+    get:
+      parameters:
+        - name: "productId"
+          in: "path"
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/Product"
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: AWS
+        uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/GetItem" }
+        credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
+        requestTemplates:
+          application/json: { 'Fn::Sub': '{ 
+              "TableName": "${Table}",
+              "Key": {
+                      "pk": {
+                        "S": "$input.params("productId")"
+                      }
+                    }
+              }'
+          }
+        responses:
+          default:
+            statusCode: 200
+            responseTemplates:
+              application/json: '#set($inputRoot = $input.path("$"))
+                {
+                    "id": "$inputRoot.Item.pk.S",
+                    "name": "$inputRoot.Item.productname.S"
+                }'
+
     put:
       parameters:
         - name: "productId"
           in: "path"
           required: true
-          type: "string"
+          schema:
+            type: string
       responses:
         204:
           $ref: "#/components/responses/Empty"
@@ -73,12 +142,15 @@ paths:
       - name: "productId"
         in: "path"
         required: true
-        type: "string"
+        schema:
+            type: string
       responses:
         200:
           description: "200 response"
-          schema:
-            $ref: "#/components/responses/Empty"
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/responses/Empty'
       x-amazon-apigateway-integration:
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/DeleteItem" }
@@ -105,6 +177,14 @@ components:
     Empty:
       type: object
       description: Empty Schema
+    Product:
+      type: object
+      description: Product
+      properties:
+        id:
+          type: string
+        name:
+          type: string
   responses:
     Created: #201
       description: The request succeeded and created a new resource.
@@ -118,5 +198,20 @@ components:
             required:
               - id
     Empty:
-      type: object
       description: Empty Schema
+      content:
+        application/json:
+          schema:
+            type: object
+
+    Product:
+      description: Product
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
