@@ -3,16 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   Lambdaless API
 
-Parameters:
-  Table: {Default: products, Type: String}  
-
-Globals:
-  Function:
-    Timeout: 10
-    Runtime: nodejs12.x
-    Tags:
-      service: lambdaless-api
-
 Resources:
   ProductsTable:
     Type: AWS::DynamoDB::Table

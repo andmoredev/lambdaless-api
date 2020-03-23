@@ -22,10 +22,14 @@ paths:
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/Scan" }
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         requestTemplates:
-          application/json: { 'Fn::Sub': '{ 
-                "TableName": "${Table}"
-              }'
-          }
+          application/json:
+            Fn::Sub:
+              - |-
+                {
+                  "TableName": "${tableName}"
+                }
+              - { tableName: { Ref: ProductsTable } }
+              
         responses:
           default:
             statusCode: 200
@@ -51,16 +55,21 @@ paths:
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/PutItem" }
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         requestTemplates:
-          application/json: { 'Fn::Sub': '{ 
-            "TableName": "${Table}",
-            "Item": {
-              "pk": {
-                "S": "$context.requestId"
-              },
-              "productname": {
-                "S": "$input.path("$.name")"
-              }
-          }}' }
+          application/json: 
+            Fn::Sub:
+              - |- 
+                { 
+                  "TableName": "${tableName}",
+                  "Item": {
+                    "pk": {
+                      "S": "$context.requestId"
+                    },
+                    "productname": {
+                      "S": "$input.path("$.name")"
+                    }
+                  }
+                }
+              - { tableName: { Ref: ProductsTable } }
         responses:
           default:
             statusCode: 201
@@ -86,15 +95,18 @@ paths:
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/GetItem" }
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         requestTemplates:
-          application/json: { 'Fn::Sub': '{ 
-              "TableName": "${Table}",
-              "Key": {
-                      "pk": {
-                        "S": "$input.params("productId")"
-                      }
-                    }
-              }'
-          }
+          application/json:
+            Fn::Sub: 
+              - |-
+                { 
+                  "TableName": "${tableName}",
+                  "Key": {
+                          "pk": {
+                            "S": "$input.params("productId")"
+                          }
+                        }
+                }
+              - { tableName: { Ref: ProductsTable } }
         responses:
           default:
             statusCode: 200
@@ -121,21 +133,24 @@ paths:
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/UpdateItem" }
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         requestTemplates:
-          application/json: { 'Fn::Sub': '{ 
-              "TableName": "${Table}",
-              "Key": {
-                      "pk": {
-                        "S": "$input.params("productId")"
-                      }
-                     },
-              "UpdateExpression": "SET productname = :name",
-              "ExpressionAttributeValues": {
-                ":name":  {
-                            "S": "$input.path("$.name")"
+          application/json: 
+            Fn::Sub: 
+              - |-
+                { 
+                  "TableName": "${tableName}",
+                  "Key": {
+                          "pk": {
+                            "S": "$input.params("productId")"
                           }
-              }
-            }'
-          }
+                        },
+                  "UpdateExpression": "SET productname = :name",
+                  "ExpressionAttributeValues": {
+                    ":name":  {
+                                "S": "$input.path("$.name")"
+                              }
+                  }
+                }
+              - { tableName: { Ref: ProductsTable } }
         responses:
           default:
             statusCode: 204
@@ -158,16 +173,19 @@ paths:
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/DeleteItem" }
         requestTemplates:
-          application/json:  { 'Fn::Sub': '{
-            "TableName": "${Table}",
-              "Key": {
-                "pk": {
-                  "S": "$input.params("productId")"
+          application/json:  
+            Fn::Sub: 
+              - |-
+                {
+                  "TableName": "${tableName}",
+                    "Key": {
+                      "pk": {
+                        "S": "$input.params("productId")"
+                      }
+                    },
+                  "ReturnValues": "ALL_OLD"
                 }
-              },
-              "ReturnValues": "ALL_OLD"
-            }'
-          }
+              - { tableName: { Ref: ProductsTable } }
         responses:
           default:
             statusCode: "200"
