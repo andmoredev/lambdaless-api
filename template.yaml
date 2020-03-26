@@ -18,6 +18,16 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 3
 
+  ProductsAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+        StageName: Lambdaless
+        DefinitionBody:
+          'Fn::Transform':
+            Name: AWS::Include
+            Parameters:
+              Location: 's3://[YOUR-S3-BUCKET-NAME]/products-openapi-definition.yaml'
+              
   ProductsAPIRole:
     Type: AWS::IAM::Role
     Properties:
@@ -46,13 +56,3 @@ Resources:
                 - "dynamodb:Scan"
 
                 Resource: !GetAtt ProductsTable.Arn
-
-  ProductsAPI:
-    Type: AWS::Serverless::Api
-    Properties:
-        StageName: Lambdaless
-        DefinitionBody:
-          'Fn::Transform':
-            Name: AWS::Include
-            Parameters:
-              Location: 's3://lechon-open-api-definitions/products-api-open-api-definition.yaml'
