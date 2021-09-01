@@ -25,4 +25,3 @@ npm run deploy
 [1]: https://twitter.com/andmoredev
 [2]: https://github.com/anmoreno
 [3]: https://www.linkedin.com/in/andmoredev/
-[4]: https://medium.com/@andmoredev
