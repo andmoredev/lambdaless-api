@@ -56,3 +56,8 @@ Resources:
                 - "dynamodb:Scan"
 
                 Resource: !GetAtt ProductsTable.Arn
+
+Outputs:
+  ProductsAPI:
+    Description: Products API Id
+    Value: !Ref ProductsAPI
