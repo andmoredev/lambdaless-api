@@ -1,4 +1,4 @@
-﻿[![Twitter][1.1]][1] [![GitHub][2.1]][2] [![LinkedIn][3.1]][3] [![Medium][4.1]][4]
+﻿[![Twitter][1.1]][1] [![GitHub][2.1]][2] [![LinkedIn][3.1]][3]
 
 # Lambdaless API
 
