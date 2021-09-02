@@ -29,7 +29,6 @@ paths:
                   "TableName": "${tableName}"
                 }
               - { tableName: { Ref: ProductsTable } }
-              
         responses:
           default:
             statusCode: 200
@@ -39,7 +38,7 @@ paths:
                             "products": [
                               #foreach($elem in $inputRoot.Items) {
                                 "id": "$elem.pk.S",
-                                "name": "$elem.productname.S",
+                                "name": "$elem.productname.S"
                               }#if($foreach.hasNext),#end
                               #end
                             ]
@@ -60,10 +59,10 @@ paths:
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/PutItem" }
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         requestTemplates:
-          application/json: 
+          application/json:
             Fn::Sub:
-              - |- 
-                { 
+              - |-
+                {
                   "TableName": "${tableName}",
                   "Item": {
                     "pk": {
@@ -131,17 +130,17 @@ paths:
             type: string
       responses:
         204:
-          $ref: "#/components/responses/Empty"
+          description: The product was updated
       x-amazon-apigateway-integration:
         httpMethod: POST
         type: AWS
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/UpdateItem" }
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         requestTemplates:
-          application/json: 
-            Fn::Sub: 
+          application/json:
+            Fn::Sub:
               - |-
-                { 
+                {
                   "TableName": "${tableName}",
                   "Key": {
                           "pk": {
@@ -168,18 +167,14 @@ paths:
         schema:
             type: string
       responses:
-        200:
-          description: "200 response"
-          content:
-            application/json:
-              schema:
-                '$ref': '#/components/responses/Empty'
+        204:
+          description: The product was deleted
       x-amazon-apigateway-integration:
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         uri: { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/DeleteItem" }
         requestTemplates:
-          application/json:  
-            Fn::Sub: 
+          application/json:
+            Fn::Sub:
               - |-
                 {
                   "TableName": "${tableName}",
@@ -193,16 +188,13 @@ paths:
               - { tableName: { Ref: ProductsTable } }
         responses:
           default:
-            statusCode: "200"
+            statusCode: 204
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         type: "aws"
 
 components:
   schemas:
-    Empty:
-      type: object
-      description: Empty Schema
     Product:
       type: object
       description: Product
@@ -243,4 +235,3 @@ components:
                 type: string
               name:
                 type: string
-                

@@ -26,8 +26,8 @@ Resources:
           'Fn::Transform':
             Name: AWS::Include
             Parameters:
-              Location: 's3://[BUCKET-NAME]/products-openapi.yaml'
-              
+              Location: ./products-openapi.yaml
+
   ProductsAPIRole:
     Type: AWS::IAM::Role
     Properties:
@@ -58,6 +58,6 @@ Resources:
                 Resource: !GetAtt ProductsTable.Arn
 
 Outputs:
-  ProductsAPI:
-    Description: Products API Id
-    Value: !Ref ProductsAPI
+  ProductsURL:
+    Description: Products URL
+    Value: !Join [ '', [ 'https://', !Ref ProductsAPI, '.execute-api.', !Sub '${AWS::Region}', '.amazonaws.com/Lambdaless' ] ]

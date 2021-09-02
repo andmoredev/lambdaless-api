@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "aws s3api create-bucket --bucket [BUCKET-NAME] && aws s3 cp ./products-openapi.yaml s3://[BUCKET-NAME]/ && sam build && sam deploy"
+    "deploy": "sam build && sam deploy"
   },
   "repository": {
     "type": "git",
