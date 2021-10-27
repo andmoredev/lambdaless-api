@@ -1,0 +1,76 @@
+{
+  "version": 1.0,
+  "tests": {
+    "contractTests": [
+      {
+        "openApiOperation": "*::/*",
+        "statusSuccess": {
+          "enabled": true
+        }
+      },
+      {
+        "openApiOperation": "*::/*",
+        "responseTime": {
+          "enabled": false,
+          "maxMs": 300
+        }
+      },
+      {
+        "openApiOperation": "*::/*",
+        "contentType": {
+          "enabled": true
+        }
+      },
+      {
+        "openApiOperation": "*::/*",
+        "jsonBody": {
+          "enabled": true
+        }
+      },
+      {
+        "openApiOperation": "*::/*",
+        "schemaValidation": {
+          "enabled": true
+        }
+      },
+      {
+        "openApiOperation": "*::/*",
+        "headersPresent": {
+          "enabled": true
+        }
+      }
+    ],
+    "contentTests": [],
+    "extendTests": [],
+    "variationTests": []
+  },
+  "assignVariables": [
+    {
+      "openApiOperation": "POST::/products",
+      "collectionVariables": [
+        {
+          "name": "newProductId",
+          "responseBodyProp": "id"
+        }
+      ]
+    }
+  ],
+  "overwrites": [
+    {
+      "openApiOperation": "*::/products/{productId}",
+      "overwriteRequestPathVariables": [
+        {
+          "key": "productId",
+          "value": "{{newProductId}}",
+          "overwrite": true
+        }
+      ]
+    }
+  ],
+  "globals": {
+    "collectionPreRequestScripts": [],
+    "keyValueReplacements": {},
+    "valueReplacements": {},
+    "rawReplacements": []
+  }
+}

@@ -1,0 +1,441 @@
+{
+  "_": {
+    "postman_id": "46f57c18-7fe3-4b00-9850-498be2a653c2"
+  },
+  "item": [
+    {
+      "id": "2ff51b44-b8e3-46bf-b1ca-158563cf7891",
+      "name": "/products",
+      "request": {
+        "name": "/products",
+        "description": {
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "products"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "method": "GET"
+      },
+      "response": [
+        {
+          "_": {
+            "postman_previewlanguage": "json"
+          },
+          "id": "b7f2542c-7919-4408-95d7-80537d11f8a9",
+          "name": "The request succeded and results are in the response message.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[]",
+          "cookie": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "1f89acdf-60b7-4a95-ade7-23c88c738d87",
+            "type": "text/javascript",
+            "exec": [
+              "// Validate status 2xx \npm.test(\"[GET]::/products - Status code is 2xx\", function () {\n   pm.response.to.be.success;\n});\n",
+              "// Validate if response header has matching content-type\npm.test(\"[GET]::/products - Content-Type is application/json\", function () {\n   pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\n});\n",
+              "// Validate if response has JSON Body \npm.test(\"[GET]::/products - Response has JSON Body\", function () {\n    pm.response.to.have.jsonBody();\n});\n",
+              "// Response Validation\nconst schema = {\"type\":\"array\",\"items\":{\"description\":\"Product\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"required\":[\"name\"],\"properties\":{\"id\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"}}}}}},\"maxItems\":2}\n\n// Validate if response matches JSON schema \npm.test(\"[GET]::/products - Schema is valid\", function() {\n    pm.response.to.have.jsonSchema(schema,{unknownFormats: [\"int32\", \"int64\"]});\n});\n"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d1052398-ceed-4e0a-b3c2-fc02cd60012e",
+      "name": "/products",
+      "request": {
+        "name": "/products",
+        "description": {
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "products"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": \"dolore tempor culpa adipisicing\",\n    \"name\": \"sunt deserunt incididunt enim\"\n}"
+        }
+      },
+      "response": [
+        {
+          "_": {
+            "postman_previewlanguage": "json"
+          },
+          "id": "75bff35c-e4da-41e7-aab9-acec7530e172",
+          "name": "The request succeeded and created a new resource.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"dolore tempor culpa adipisicing\",\n    \"name\": \"sunt deserunt incididunt enim\"\n}"
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n \"id\": \"proident pariatur id Ut ut\"\n}",
+          "cookie": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "f66293a8-1314-4534-95dd-90b8ff234de1",
+            "type": "text/javascript",
+            "exec": [
+              "// Validate status 2xx \npm.test(\"[POST]::/products - Status code is 2xx\", function () {\n   pm.response.to.be.success;\n});\n",
+              "// Validate if response header has matching content-type\npm.test(\"[POST]::/products - Content-Type is application/json\", function () {\n   pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\n});\n",
+              "// Validate if response has JSON Body \npm.test(\"[POST]::/products - Response has JSON Body\", function () {\n    pm.response.to.have.jsonBody();\n});\n",
+              "// Response Validation\nconst schema = {\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"}},\"required\":[\"id\"]}\n\n// Validate if response matches JSON schema \npm.test(\"[POST]::/products - Schema is valid\", function() {\n    pm.response.to.have.jsonSchema(schema,{unknownFormats: [\"int32\", \"int64\"]});\n});\n",
+              "// Set response object as internal variable\nlet jsonData = pm.response.json();\n",
+              "// pm.collectionVariables - Set newProductId as variable for jsonData.id  \nif (typeof jsonData.id !== \"undefined\") {\n   pm.collectionVariables.set(\"newProductId\", jsonData.id);\n   console.log(\"- use {{newProductId}} as collection variable for value\",jsonData.id);\n};\n"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "078da635-785d-4574-8d57-0bde2ec4b391",
+      "name": "/products/:productId",
+      "request": {
+        "name": "/products/:productId",
+        "description": {
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "products",
+            ":productId"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "description": {
+                "content": "(Required) ",
+                "type": "text/plain"
+              },
+              "type": "string",
+              "value": "{{newProductId}}",
+              "key": "productId"
+            }
+          ]
+        },
+        "method": "GET"
+      },
+      "response": [
+        {
+          "_": {
+            "postman_previewlanguage": "json"
+          },
+          "id": "21a51869-98e0-4cbd-ac0b-cb6699a1f183",
+          "name": "Product",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                ":productId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "key": "productId"
+                }
+              ]
+            },
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n \"name\": \"velit laboris cupidatat aliquip Ut\",\n \"id\": \"commodo in\"\n}",
+          "cookie": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "0aea069a-3620-4385-b8a0-320cba691b83",
+            "type": "text/javascript",
+            "exec": [
+              "// Validate status 2xx \npm.test(\"[GET]::/products/:productId - Status code is 2xx\", function () {\n   pm.response.to.be.success;\n});\n",
+              "// Validate if response header has matching content-type\npm.test(\"[GET]::/products/:productId - Content-Type is application/json\", function () {\n   pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\n});\n",
+              "// Validate if response has JSON Body \npm.test(\"[GET]::/products/:productId - Response has JSON Body\", function () {\n    pm.response.to.have.jsonBody();\n});\n",
+              "// Response Validation\nconst schema = {\"type\":\"object\",\"required\":[\"name\"],\"properties\":{\"id\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"}}}\n\n// Validate if response matches JSON schema \npm.test(\"[GET]::/products/:productId - Schema is valid\", function() {\n    pm.response.to.have.jsonSchema(schema,{unknownFormats: [\"int32\", \"int64\"]});\n});\n"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "8b197c9a-cf73-491c-a236-606c92d872f0",
+      "name": "/products/:productId",
+      "request": {
+        "name": "/products/:productId",
+        "description": {
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "products",
+            ":productId"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "description": {
+                "content": "(Required) ",
+                "type": "text/plain"
+              },
+              "type": "string",
+              "value": "{{newProductId}}",
+              "key": "productId"
+            }
+          ]
+        },
+        "method": "PUT"
+      },
+      "response": [
+        {
+          "_": {
+            "postman_previewlanguage": "text"
+          },
+          "id": "eac38aca-9992-4371-978d-b115b90c3935",
+          "name": "The product was updated",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                ":productId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "key": "productId"
+                }
+              ]
+            },
+            "method": "PUT",
+            "body": {}
+          },
+          "status": "No Content",
+          "code": 204,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "b10e053d-a68f-4718-a6fb-b742ce3e92b8",
+            "type": "text/javascript",
+            "exec": [
+              "// Validate status 2xx \npm.test(\"[PUT]::/products/:productId - Status code is 2xx\", function () {\n   pm.response.to.be.success;\n});\n"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "555da8ad-ad45-4707-bdef-edba7851f384",
+      "name": "/products/:productId",
+      "request": {
+        "name": "/products/:productId",
+        "description": {
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "products",
+            ":productId"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "description": {
+                "content": "(Required) ",
+                "type": "text/plain"
+              },
+              "type": "string",
+              "value": "{{newProductId}}",
+              "key": "productId"
+            }
+          ]
+        },
+        "method": "DELETE"
+      },
+      "response": [
+        {
+          "_": {
+            "postman_previewlanguage": "text"
+          },
+          "id": "b28e2830-68cf-4753-8bb6-3ba987389286",
+          "name": "The product was deleted",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                ":productId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "key": "productId"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "body": {}
+          },
+          "status": "No Content",
+          "code": 204,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "1d2971b9-ebf2-4ad7-b7ef-c7d0e5d27c84",
+            "type": "text/javascript",
+            "exec": [
+              "// Validate status 2xx \npm.test(\"[DELETE]::/products/:productId - Status code is 2xx\", function () {\n   pm.response.to.be.success;\n});\n"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "10de5b5d-36a1-4a90-8056-3dd4b1135a36",
+        "type": "text/javascript",
+        "exec": []
+      }
+    }
+  ],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://kkyi46yfn1.execute-api.us-east-1.amazonaws.com/Lambdaless",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "46f57c18-7fe3-4b00-9850-498be2a653c2",
+    "name": "Products API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}
