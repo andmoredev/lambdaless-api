@@ -3,6 +3,10 @@ info:
   title:
     Products API
   version: 1.0.0
+
+servers:
+  - url: https://kkyi46yfn1.execute-api.us-east-1.amazonaws.com/Lambdaless
+
 paths:
   /products:
     get:
@@ -15,7 +19,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/responses/Product"
-              
+
       x-amazon-apigateway-integration:
         httpMethod: POST
         type: AWS
@@ -34,15 +38,13 @@ paths:
             statusCode: 200
             responseTemplates:
               application/json: '#set($inputRoot = $input.path("$"))
-                          {
-                            "products": [
-                              #foreach($elem in $inputRoot.Items) {
-                                "id": "$elem.pk.S",
-                                "name": "$elem.productname.S"
-                              }#if($foreach.hasNext),#end
-                              #end
-                            ]
-                          }'
+                          [
+                            #foreach($elem in $inputRoot.Items) {
+                              "id": "$elem.pk.S",
+                              "name": "$elem.productname.S"
+                            }#if($foreach.hasNext),#end
+                            #end
+                          ]'
 
     post:
       responses:
@@ -100,9 +102,9 @@ paths:
         credentials: { "Fn::GetAtt": [ ProductsAPIRole, Arn ] }
         requestTemplates:
           application/json:
-            Fn::Sub: 
+            Fn::Sub:
               - |-
-                { 
+                {
                   "TableName": "${tableName}",
                   "Key": {
                           "pk": {
