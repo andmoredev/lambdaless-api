@@ -21,6 +21,11 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
         StageName: Lambdaless
+        Auth:
+          ApiKeyRequired: true
+          UsagePlan:
+            CreateUsagePlan: PER_API
+            UsagePlanName: ProductsAPIUsagePlan
         DefinitionBody:
           'Fn::Transform':
             Name: AWS::Include
@@ -60,3 +65,7 @@ Outputs:
   ProductsURL:
     Description: Products URL
     Value: !Join [ '', [ 'https://', !Ref ProductsAPI, '.execute-api.', !Sub '${AWS::Region}', '.amazonaws.com/Lambdaless' ] ]
+
+  ApiKeyId:
+    Description: API Key ApiKeyId
+    Value: !Ref ProductsAPIApiKey

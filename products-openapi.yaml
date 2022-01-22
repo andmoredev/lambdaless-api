@@ -7,6 +7,9 @@ info:
 servers:
   - url: https://kkyi46yfn1.execute-api.us-east-1.amazonaws.com/Lambdaless
 
+security:
+  - ApiKeyAuth: []
+
 paths:
   /products:
     get:
@@ -196,6 +199,11 @@ paths:
         type: "aws"
 
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
   schemas:
     Product:
       type: object

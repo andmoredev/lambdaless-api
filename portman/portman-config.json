@@ -71,6 +71,11 @@
     "collectionPreRequestScripts": [],
     "keyValueReplacements": {},
     "valueReplacements": {},
-    "rawReplacements": []
+    "rawReplacements": [],
+    "securityOverwrites": {
+      "apiKey": {
+        "value": "API KEY HERE"
+      }
+    }
   }
 }
