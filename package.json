@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "sam build && sam deploy"
+    "deploy": "sam build && sam deploy",
+    "portman": "portman --cliOptionsFile portman/portman-cli.json"
   },
   "repository": {
     "type": "git",
